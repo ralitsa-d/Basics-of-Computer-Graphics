@@ -1,0 +1,187 @@
+<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.min.js"></script>
+		<script>
+
+
+			
+			var renderer = new THREE.WebGLRenderer({antialias:true});
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			renderer.setClearColor('white');
+
+			var scene = new THREE.Scene();
+			
+			var camera = new THREE.PerspectiveCamera( 30, window.innerWidth/window.innerHeight, 0.1, 1000 );
+			camera.position.set(0,3,30);
+			camera.lookAt(new THREE.Vector3(0,0,0));
+
+
+			var shape = new THREE.Shape();
+			shape.moveTo( 0.02, 0.18);
+			shape.quadraticCurveTo( 2.32, 0.72, 3.74, 3.82 );
+			shape.quadraticCurveTo( 3.78, 4, 3.14, 4.52 );
+			shape.bezierCurveTo(2.66, 4.4, 3.54, 4.38, 3.28, 3.54);
+			//shape.quadraticCurveTo( 3.56, 4.04, 3.28, 3.54);
+			shape.quadraticCurveTo(1.88, 1.18, 0.02, 0.18);
+
+			var shape1a = new THREE.Shape();
+			shape1a.moveTo(2.02, 1.36);
+			shape1a.bezierCurveTo(3, 1.09, 3.24, 0.54, 3.04, -0.06);
+			shape1a.quadraticCurveTo(2.4, 0.08, 2.02, 1.36);
+
+			
+			var shape2 = new THREE.Shape();
+			shape2.moveTo( 0.66, -1.92);
+			shape2.bezierCurveTo( 2.7, -1.1, 3.88, -0.24, 5.7, 4.16 );
+			shape2.bezierCurveTo(5.7, 4.5, 5.18, 4.74, 5, 4.9);
+			shape2.bezierCurveTo(4.34, 5.04, 5.46, 4.56, 5.08, 3.66);
+			//shape2.quadraticCurveTo(5.04, 2.3, 3.3, -0.82, 0.66, -1.92);
+			shape2.bezierCurveTo(4.48, 1.88, 3.06, -0.64, 0.66, -1.92);
+			//shape2.bezierCurveTo(5.68, 3.58, 3.64, -0.44, 0.66, -1.92 );
+
+
+			var shape2a = new THREE.Shape();
+			shape2a.moveTo(4.1, 1.04);
+			shape2a.bezierCurveTo(4.58929, 0.28, 5.33929, 0.62, 5.41071, -0.56);
+			shape2a.bezierCurveTo(5.21714, -0.96, 4.63429, -0.38, 4.1, 1.04 );
+			
+
+			var shape3 = new THREE.Shape();
+			shape3.moveTo( 6.82, -4.6);
+			shape3.quadraticCurveTo( 7.2, -2.98, 7.1, 5.42 );
+			shape3.quadraticCurveTo( 6.76, 5.58, 5.8, 5.78);
+			shape3.bezierCurveTo(5.35429, 5.48, 6.77714, 5.42, 6.74286, 4.52);
+			
+
+			
+			var shape4 = new THREE.Shape();
+			shape4.moveTo(-2.23531, 1.35093);
+			shape4.quadraticCurveTo(-1.6566, 1.60714, -1.79163, 5.5);
+			shape4.quadraticCurveTo(-1.8688, 5.62112, -2.81402, 5.82609);
+			shape4.bezierCurveTo(-3.41143, 5.66, -2.10857, 5.74, -2.17744, 5.24534);
+			//shape4.quadraticCurveTo( -2.27389, 5.5869, -2.17744, 5.24534 );
+
+			var shape4a = new THREE.Shape();
+			shape4a.moveTo(-2.02312, 3.29814);
+			shape4a.bezierCurveTo(-1.19364, 3.26398, -0.63422, 3.79348, -0.17125, 3.31522);
+			shape4a.bezierCurveTo(-0.40274, 2.81988, -0.82712, 2.92236, -2.02312, 3.29814);
+
+			var shape5 = new THREE.Shape();
+			shape5.moveTo(-6.89286, 4.94);
+			shape5.bezierCurveTo(-6.91071, 5.34, -6.00643, 5, -5.82143, 4.92);
+			shape5.bezierCurveTo(-5.80357, 2.62, -6.08929, 1.82, -5.82143, 1.78);
+			shape5.bezierCurveTo(-4.75, 1.906, -3.60714, 2.06, -2.14286, 2.94);
+			shape5.bezierCurveTo(-3.44643, 1.74, -6.40357, 1.1, -6.5, 1.34 );
+			shape5.bezierCurveTo(-6.64286, 1.66, -6.48214, 2.9, -6.32143, 4.7 );
+
+			var shape6 = new THREE.Shape();
+			shape6.moveTo(-6.30429, 0.42);
+			shape6.quadraticCurveTo(-4.39286, 0.48, -1.875, 0.46);
+			shape6.bezierCurveTo(-1.71429, 0.74, -1.32143, 0.54, -1.07143, 0.46);
+			shape6.quadraticCurveTo(-1.23214, -0.58, -1.42857, -1.7);
+			shape6.bezierCurveTo(-1.92857, -2.24, -1.75, -0.68, -1.53571, 0.12);
+			shape6.quadraticCurveTo(-2.25, 0.22, -5.125, 0.22);
+			shape6.bezierCurveTo(-5.58929, -0.14, -5.75, 0.32, -6.30429, 0.42);
+
+			var shape7 = new THREE.Shape();
+			shape7.moveTo(-6.10714, -1.76);
+			shape7.quadraticCurveTo(-4.19643, -1.74, -2.00143, -1.76);
+			shape7.bezierCurveTo(-1.25, -1.18, -0.64286, -1.98, -1.16071, -1.96);
+			shape7.quadraticCurveTo(-2.30287, -2.1, -5.84392, -1.9);
+
+			var shape8 = new THREE.Shape();
+			shape8.moveTo(-1, -4);
+			shape8.bezierCurveTo(-1.21429, -3.44, -2, -4, -2.48214, -4.02);
+			shape8.quadraticCurveTo(-3.80357, -4, -5.6, -4);
+			shape8.bezierCurveTo(-6, -4, -5.78571, -2.5, -5.75, -1.86);
+			shape8.bezierCurveTo( -5.44643, -1.54, -6.69643, -1.34, -6.73214, -1.7 );
+			shape8.bezierCurveTo( -6.03571, -2.42, -6.05357, -2.2, -6.17857, -4.06 );
+			shape8.bezierCurveTo( -6.05357, -4.66, -5.35714, -4.4, -5.10714, -4.4);
+			shape8.bezierCurveTo( -2.75, -4.36, -0.35714, -4.7, -1, -4 );
+
+
+			
+			var extrudeSettings = { amount: 0.5, bevelEnabled: false, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1, curveSegments: 60 };
+			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+			
+			var object = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add( object );
+
+			var geom2 = new THREE.ExtrudeGeometry(shape2, extrudeSettings );
+			var obj2 = new THREE.Mesh( geom2, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(obj2);
+
+			var geom3 = new THREE.ExtrudeGeometry(shape3, extrudeSettings );
+			var obj3 = new THREE.Mesh( geom3, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(obj3);
+
+			var geometry1a = new THREE.ExtrudeGeometry( shape1a, extrudeSettings );
+			var object1a = new THREE.Mesh( geometry1a, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(object1a);
+
+			var geom2a = new THREE.ExtrudeGeometry( shape2a, extrudeSettings );
+			var obj2a = new THREE.Mesh( geom2a, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(obj2a);
+
+
+			var geom4 = new THREE.ExtrudeGeometry(shape4, extrudeSettings );
+			var obj4 = new THREE.Mesh( geom4, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(obj4);
+
+			var geom4a = new THREE.ExtrudeGeometry(shape4a, extrudeSettings );
+			var obj4a = new THREE.Mesh( geom4a, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(obj4a);
+
+			var geom5 = new THREE.ExtrudeGeometry(shape5, extrudeSettings );
+			var obj5 = new THREE.Mesh( geom5, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(obj5);
+
+			var geom6 = new THREE.ExtrudeGeometry(shape6, extrudeSettings );
+			var obj6 = new THREE.Mesh( geom6, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(obj6);
+
+			var geom7 = new THREE.ExtrudeGeometry(shape7, extrudeSettings );
+			var obj7 = new THREE.Mesh( geom7, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(obj7);
+
+			var geom8 = new THREE.ExtrudeGeometry(shape8, extrudeSettings );
+			var obj8 = new THREE.Mesh( geom8, new THREE.MeshPhongMaterial({specular:'white'}) );
+			scene.add(obj8);
+
+			
+			// светлини
+			var light = new THREE.PointLight('dodgerblue',0.75); // интензитет 0.75
+			light.position.set(200,50,0);
+			scene.add(light);
+			
+			light = new THREE.PointLight('dodgerblue',0.75); // интензитет 0.75
+			light.position.set(-200,50,0);
+			scene.add(light);
+			
+			light = new THREE.PointLight('hotpink',0.1); // интензитет 0.75
+			light.position.set(0,50,200);
+			scene.add(light);
+			
+			light = new THREE.PointLight('fuchsia',0.75); // интензитет 0.75
+			light.position.set(0,50,-200);
+			scene.add(light);
+			
+			function drawFrame()
+			{
+				requestAnimationFrame( drawFrame );
+				
+				scene.rotation.y += 0.005;
+				
+				renderer.render( scene, camera );
+			}
+			drawFrame();
+		</script>
+	</body>
+</html>

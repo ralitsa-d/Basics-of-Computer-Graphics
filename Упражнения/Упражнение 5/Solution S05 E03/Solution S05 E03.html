@@ -1,0 +1,93 @@
+﻿<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.min.js"></script>
+		<script src="ThreeCSG.js"></script>
+		<script>
+			// Задача: конструирайте порцеланова чаша със
+			// загладени ръбове. 
+
+			
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			renderer.setClearColor( 'pink' );
+
+			var scene = new THREE.Scene();
+			
+			var camera = new THREE.PerspectiveCamera( 30, window.innerWidth/window.innerHeight, 0.1, 1000 );
+			camera.position.set(0,0,10);
+			camera.lookAt(new THREE.Vector3(0,0,0));
+
+	
+			var material = new THREE.MeshPhongMaterial({color:'purple',shininess:100,specular:0xFFFFFF});
+			
+			var mug = new THREE.Object3D();
+			scene.add( mug );
+			
+			// Основно тяло с дупка по средата (чаша без дъно)
+			var body = new THREE.CylinderGeometry( 1.1, 1.1, 2.5, 80 );
+			var hole = new THREE.CylinderGeometry( 0.9, 0.9, 3.0, 80 );
+			var bsp = (new ThreeBSP(body)).subtract(new ThreeBSP(hole));
+			
+			// Преобразуваме обратно до Three.js като все пак
+			// заглаждаме околната стена, като преизчисляваме
+			// нормалните вектори към върховете (заради 
+			// конкретната реализация на CSG това преизчисляване
+			// дава тук-таме неадекватни резултати)
+			var mugBody = bsp.toMesh(material);
+			mugBody.geometry.computeVertexNormals();
+			mug.add( mugBody );
+
+			// Останалите обеки няма нужда да се включват в
+			// обработката чрез CSG, затова ги добавяме направо
+			
+			// Заглаждане на горния ръб с тор
+			var edge = new THREE.Mesh(new THREE.TorusGeometry( 1, 0.1, 20, 80 ), material);
+			edge.position.y = 1.25;
+			edge.rotation.x = Math.PI/2;
+			mug.add(edge);
+
+			// Заглаждане на долния ръб с тор
+			var bottomEdge = edge.clone();
+			bottomEdge.position.y = -1.25;
+			mug.add(bottomEdge);
+
+			// Дъно на чашата
+			var bottom = new THREE.Mesh(new THREE.CylinderGeometry( 1, 1, 0.2, 80 ), material);
+			bottom.position.y = -1.25;
+			mug.add(bottom);
+
+			// И, разбира се, дръжка - използваме 5-тия параметър
+			// на тор, с който се рисува само част от него
+			var handle = new THREE.Mesh(new THREE.TorusGeometry( 0.7, 0.2, 10, 80, 4 ), material);
+			handle.position.x = 1.3;
+			handle.rotation.z = -2;
+			mug.add(handle);
+			
+			
+			
+			var light = new THREE.PointLight();
+			light.position.set(0,5,10);
+			scene.add(light);
+			
+			function drawFrame()
+			{
+				requestAnimationFrame( drawFrame );
+				
+				// въртим чашата
+				mug.rotation.x += 0.015;
+				mug.rotation.z = Math.sin(2*mug.rotation.x)/2;
+				mug.rotation.y += 0.010;
+				
+				renderer.render( scene, camera );
+			}
+			drawFrame();
+		</script>
+	</body>
+</html>

@@ -1,0 +1,90 @@
+﻿<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.min.js"></script>
+		<script>
+			// Задача: Направете гледната точка да се върти
+			// около обекта като ту да се приближава, ту да
+			// се отдалечава от него
+
+			
+	
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			renderer.setClearColor('gainsboro');
+
+			var scene = new THREE.Scene();
+
+			// Ето този обект camera се грижи за гледната
+			// точка и той трява да се манипулира за решението
+			// на задачата
+			
+			var camera = new THREE.PerspectiveCamera( 30, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+			
+			// шредер
+			var shredder = new THREE.Object3D();
+			var x=0.5, y=10;
+			for (var i=0; i<40; i++)
+			{
+				var obj = new THREE.Geometry();
+				for (var j=0; j<3; j++)
+				{
+					var plate = new THREE.Mesh(
+						new THREE.BoxGeometry(x,y,y)						
+					);
+					plate.rotation.x = i*10*Math.PI/180+j*30*Math.PI/180;
+					plate.updateMatrix();
+					obj.merge(plate.geometry, plate.matrix);
+				}
+				shredder.add(
+					new THREE.Mesh(obj,
+						new THREE.MeshPhongMaterial({color:new THREE.Color('hsl('+(i/40*360+20)+',100%,50%)'), shininess:50})) );
+				x += 0.5;
+				y *= 0.9;
+			}
+			scene.add( shredder );
+			
+			// светлина (ще я движим заедно с гледната точка)
+			var light = new THREE.PointLight();
+			light.position.set (0,0,10);
+			scene.add( light );
+
+	
+			var clock = new THREE.Clock();
+			
+			function drawFrame()
+			{
+				requestAnimationFrame( drawFrame );
+			
+				var t = clock.getElapsedTime();
+
+				var radius = 40 + Math.sin(t)*10;
+			
+				// позицията на гледната точка е по дъга
+				// от окръжност с радиус d
+				camera.position.set(radius*Math.sin(t/3),0,radius*Math.cos(t/3));
+				
+				// камерата е обърната към позицията на шредера
+				camera.lookAt(shredder.position);
+
+				// а пък светлината се мести там, където е
+				// самата камера
+				light.position.copy(camera.position);
+			
+				// въртим шредера около оста му
+				shredder.rotation.x = -4*t;
+				
+				renderer.render( scene, camera );
+			}
+			
+			drawFrame();
+		</script>
+	</body>
+</html>

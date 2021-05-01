@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+
+<html>
+	<head>
+		<script src="three.min.js"></script>
+		<script src="human.js"></script>
+	</head>
+	
+	<body>
+		<h1>"Люлка"<br><small>ф.н. 81580 &ndash; група 3 &ndash; Ралица Димитрова</small></h1>
+
+		<script>
+			// нагласяване на цвета и центрирането на текста с имената ви
+			document.getElementsByTagName('h1')[0].style = 'color:white; text-align:center; font-size:1.75em';
+			
+			// рисувателно поле на цял екран
+			renderer = new THREE.WebGLRenderer({antialias:true});
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			renderer.domElement.style = 'width:100%; height:100%; position:fixed; top:0; left:0; z-index:-1;';
+			
+			// сцена и камера
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera( 30, window.innerWidth/window.innerHeight, 0.1, 2000 );
+			camera.position.set(0,3,150);
+
+			//дъска
+			var material = new THREE.MeshPhongMaterial();
+			material.color.set('gold');
+			var geometry = new THREE.BoxGeometry( 100, 1.6, 8 );
+
+			
+			var shape1a = new THREE.Mesh( new THREE.BoxGeometry(1, 8, 4), material );
+			shape1a.position.set(-27.5, -5, 0);
+			var shape1b = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 18, 8), material);
+			shape1b.position.set(-27.5, -10, 0);
+			shape1b.position.y = -5;
+			shape1b.rotation.x = Math.PI/2;
+			shape1b.rotation.z = Math.PI/18;
+
+			var shape2a = new THREE.Mesh( new THREE.BoxGeometry(1, 8, 4), material );
+			shape2a.position.set(27.5, -5, 0);
+			var shape2b = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 28, 8), material);
+			shape2b.position.set(28, -10, 0);
+			shape2b.position.y = -5;
+			shape2b.rotation.x = Math.PI/2;
+			shape2b.rotation.z = Math.PI/18;
+			
+			var beam = new THREE.Mesh( geometry, material );
+			beam.position.set(0, -10, 0);	
+			//scene.add( beam );
+
+			var beam1 = new THREE.Object3D();
+			beam1.add(beam, shape1a, shape1b, shape2a, shape2b);
+			scene.add(beam1);
+
+			//дъска-по-хубава
+			// var shape = new THREE.Shape();
+			// shape.moveTo(  -50,  0 );
+			// shape.lineTo(  50, 0 );
+			// shape.lineTo(50, 1);
+			// shape.lineTo( 25, 1 );
+			// shape.lineTo(  25,  3 );
+			// shape.lineTo( 26, 3);
+			// shape.lineTo( 26, 4);
+			// shape.lineTo(23, 4);
+			// shape.lineTo(23, 3);
+			// shape.lineTo(24, 3);
+			// shape.lineTo(24, 1);
+			// shape.lineTo(-24, 1);
+			// shape.lineTo(-24, 3);
+			// shape.lineTo(-23, 3);
+			// shape.lineTo(-23, 4);
+			// shape.lineTo(-26, 4);
+			// shape.lineTo(-26, 3);
+			// shape.lineTo(-25, 3);
+			// shape.lineTo(-25, 1);
+			// shape.lineTo(-50, 1);
+			var extrudeSettings = { amount: 7, bevelEnabled: true, bevelSegments: 9, steps: 0, bevelSize: 0.9, bevelThickness: 0.9 };
+			//var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+			// var object = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial({shininess:140,specular:'white'}) );
+			// scene.add( object );
+			
+
+			//опора
+			var triangle = new THREE.Shape();
+			triangle.moveTo(-5, -28);
+			triangle.lineTo(5, -28);
+			triangle.lineTo(0, -11);
+			var geom = new THREE.ExtrudeGeometry(triangle, extrudeSettings);
+			var object1 = new THREE.Mesh(geom, new THREE.MeshPhongMaterial({shininess:10,specular:'gold', color: 'gold'}));
+			scene.add(object1);
+
+
+			// светлини
+			var light = new THREE.DirectionalLight('lightblue',0.8);
+			light.position.set(0,1,4);
+			scene.add(light);
+			scene.add( new THREE.AmbientLight('white',0.4) );
+
+			// функция за анимиране на сцената
+			var t = 0; // време
+			function drawFrame()
+			{
+				requestAnimationFrame( drawFrame );
+				if (animate) animate(t++);
+				renderer.render( scene, camera );
+			}
+			
+			
+			// човече
+			манекен = мъжествен();
+			манекен2 = женствен();
+			// тук се описват статичните елементи на позата
+
+			
+
+			манекен.д_крак.врът(0, 90, 90);
+			манекен.д_коляно.врът(0, 0, 0);
+			манекен.л_крак.врът(0, 0, 90);
+			манекен.л_коляно.врът(0, 0, 0);
+			манекен2.врът(0, 180, 0);
+			
+			
+			animate = function (t)
+			{
+				манекен.position.set(-40, -7, 0);
+				манекен.scale.set(0.83, 0.83, 0.83);
+				
+				манекен.д_крак.врът(0, 30, 60*sin(-t)-60);
+				манекен.д_коляно.врът(0, 0, -(60*sin(-t)-60));
+				манекен.л_крак.врът(0, -30, 60*sin(-t)-60);
+				манекен.л_коляно.врът(0, 0, -(60*sin(-t)-60));
+				манекен.тяло.врът(0, 0, 10*sin(t)-20);
+				манекен.д_ръка.врът(0, 0, -30);
+				манекен.д_лакът.врът(0, 0, -18*sin(t)-54);
+				манекен.л_ръка.врът(0, 0, -30);
+				манекен.л_лакът.врът(0, 0, -18*sin(t)-54);
+				манекен.врат.врът(0, 0, 5*sin(t));
+				манекен.глава.врът(0, 0, 10*sin(t));
+				манекен.л_глезен.врът(0, 0, 35*sin(-t)+26);
+				манекен.д_глезен.врът(0, 0, 35*sin(-t)+26);
+							
+				
+				манекен2.position.set(40, -7, 0);
+				манекен2.д_ръка.врът(12*sin(t), 0, 0);
+				манекен2.д_крак.врът(0, 20, 70*sin(t)-60);
+				манекен2.д_коляно.врът(0, 0, -(60*sin(t)-60));
+				манекен2.л_крак.врът(0, -20, 70*sin(t)-60);
+				манекен2.л_коляно.врът(0, 0, -(60*sin(t)-60));
+				манекен2.тяло.врът(0, 0, sin(t)-10);
+				манекен2.д_ръка.врът(0, 0, -20);
+				манекен2.д_лакът.врът(0, 0, -27*sin(-t)-50);
+				манекен2.л_ръка.врът(0, 0, -20);
+				манекен2.л_лакът.врът(0, 0, -27*sin(-t)-50);
+				манекен2.врат.врът(0, 0, 5*sin(-t));
+				манекен2.глава.врът(0, 0, 24*sin(-t));
+				манекен2.л_глезен.врът(0, 0, 26*sin(t)+40);
+				манекен2.д_глезен.врът(0, 0, 26*sin(t)+40);
+
+				beam1.rotation.set(0, 0, 2*sin(t)/6);
+				манекен.position.y = -14*sin(t)-7;
+				манекен2.position.y = 14*sin(t)-7;
+			}
+
+			drawFrame();
+		</script>
+	</body>
+</html>

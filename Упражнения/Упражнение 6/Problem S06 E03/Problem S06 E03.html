@@ -1,0 +1,90 @@
+﻿<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.min.js"></script>
+		<script>
+			// Задача: изградете селище с различни по размер
+			// къщи, ориентирани в една от две перпендикулярни
+			// посоки, като добавете и мъгла, така че да са
+			// замъглени най-отдалечените къщи
+
+			
+			var renderer = new THREE.WebGLRenderer({antialias:true});
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			
+			// цвят на фона
+			renderer.setClearColor('tan');
+
+			var scene = new THREE.Scene();
+			scene.fog = new THREE.FogExp2('tan', 0.01);
+			
+			var camera = new THREE.PerspectiveCamera( 30, window.innerWidth/window.innerHeight, 0.1, 1000 );
+			camera.position.set(0,15,100);
+			camera.lookAt(new THREE.Vector3(0,0,0));
+
+
+			// профил на къща
+			var shape = new THREE.Shape();
+			shape.moveTo(   2, 0 );
+			shape.lineTo(   2, 4 );
+			shape.lineTo( 2.5, 4 );
+			shape.lineTo(   0, 6 );
+			shape.lineTo(-2.5, 4 );
+			shape.lineTo(  -2, 4 );
+			shape.lineTo(  -2, 0 );
+			shape.lineTo(   2, 0 );
+
+			var side = 100;
+
+			// създаване на къщата като изтòчен обект
+			var extrudeSettings = { amount: 6, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.1, bevelThickness: 0.1 };
+			var geometry = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+
+
+			var village = new THREE.Object3D();
+			scene.add(village);
+			
+			// къща
+			for(var i=0; i<100; i++){
+				var house = new THREE.Mesh( geometry, new THREE.MeshPhongMaterial() );
+				house.position.set(side*Math.random()-size/2, 0, size*Math.random()-side/2);
+
+				house.scale.set(Math.random()+1, Math.random()+1, Math.random()+1);
+				house.rotation.y = Math.random()+PI/2;
+				village.add(house);
+			}
+			
+			scene.add( village );
+
+			// светлини
+			light1 = new THREE.PointLight('orange',0.5);
+			light1.position.set(20,40,0);
+			scene.add(light1);
+			
+			light3 = new THREE.PointLight('red',0.5);
+			light3.position.set(-20,40,0);
+			scene.add(light3);
+			
+			light2 = new THREE.PointLight();
+			light2.position.set(0,-50,100);
+			scene.add(light2);
+
+			function drawFrame()
+			{
+				requestAnimationFrame( drawFrame );
+				
+				// въртим къщата
+				house.rotation.y += 0.003;
+				
+				renderer.render( scene, camera );
+			}
+			drawFrame();
+		</script>
+	</body>
+</html>

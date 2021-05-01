@@ -1,0 +1,126 @@
+﻿<html>
+	<head>
+		<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+		</style>
+	</head>
+	<body>
+		<script src="three.min.js"></script>
+		<script src="ThreeCSG.js"></script> 
+		<script>
+			// Задача: конструирайте ... мистериозния обект
+			// с трите различни профила
+
+			
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			renderer.setClearColor( 'white' );
+
+			var scene = new THREE.Scene();
+			
+			var camera = new THREE.PerspectiveCamera( 30, window.innerWidth/window.innerHeight, 0.1, 1000 );
+			camera.position.set(0,0,100);
+			camera.lookAt(new THREE.Vector3(0,0,0));
+
+
+			var mystery = new THREE.Object3D();
+			scene.add(mystery);
+
+				
+			var ring = new ThreeBSP(new THREE.CylinderGeometry(9.8,9.8,20,160));
+			var hole = new ThreeBSP(new THREE.CylinderGeometry(7,7,21,160));
+			var material = new THREE.MeshLambertMaterial({color:'crimson',transparent:!true,opacity:0.75});
+			mystery.add((ring.subtract(hole)).toMesh(material));
+
+
+			material = new THREE.MeshLambertMaterial({color:'white',transparent:true,opacity:0.75});
+			var bar1 = new THREE.Mesh(new THREE.BoxGeometry(9,10,20));
+				bar1.position.set(6,6.5,0);
+			var bar2 = new THREE.Mesh(new THREE.BoxGeometry(9,10,20));
+				bar2.position.set(-6,6.5,0);
+			var bar6 = new THREE.Mesh(new THREE.BoxGeometry(9,10,10),material);
+				bar6.position.set(0,6.5,-5);
+			mystery.add(
+				new ThreeBSP(bar1)
+				.union(new ThreeBSP(bar2))
+				.union(new ThreeBSP(bar6))
+				.toMesh(material));
+
+			var bar3 = new THREE.Mesh(new THREE.BoxGeometry(9,10,20),material);
+				bar3.position.set(6,-6.5,0);
+			var bar4 = new THREE.Mesh(new THREE.BoxGeometry(9,10,20),material);
+				bar4.position.set(-6,-6.5,0);
+			var bar5 = new THREE.Mesh(new THREE.BoxGeometry(9,10,10),material);
+				bar5.position.set(0,-6.5,5);
+			mystery.add(
+				new ThreeBSP(bar3)
+				.union(new ThreeBSP(bar4))
+				.union(new ThreeBSP(bar5))
+				.toMesh(material));
+
+/*
+
+			
+			var edges = new THREE.BoxHelper(box);
+			edges.material.color.set ('black');
+			die.add(edges);
+			
+			var d = 0.9; // разстояние между отворите
+			var geometry = new THREE.CylinderGeometry(0.4,0.4,0.5,20);
+			geometry.openEnded = true;
+			var material = new THREE.MeshLambertMaterial()
+
+			
+			var hole = new THREE.Mesh(geometry,material);
+			hole.position.set( -d,2,-d ); die.add( hole );
+
+			hole = hole.clone(); hole.position.set( d,2,d ); die.add( hole );
+
+			hole = hole.clone(); hole.position.set( -d,-2,-d ); die.add( hole );
+			hole = hole.clone(); hole.position.set( -d,-2,d ); die.add( hole );
+			hole = hole.clone(); hole.position.set( d,-2,-d ); die.add( hole );
+			hole = hole.clone(); hole.position.set( d,-2,d ); die.add( hole );
+			hole = hole.clone(); hole.position.set( 0,-2,0 ); die.add( hole );
+
+			hole = hole.clone(); hole.rotation.z = Math.PI/2;
+			hole.position.set( 2,0,0 ); die.add(hole);
+
+			hole = hole.clone(); hole.position.set( -2,-d,-d ); die.add(hole);
+			hole = hole.clone(); hole.position.set( -2,-d,0 ); die.add(hole);
+			hole = hole.clone(); hole.position.set( -2,-d,d ); die.add(hole);
+			hole = hole.clone(); hole.position.set( -2,d,-d ); die.add(hole);
+			hole = hole.clone(); hole.position.set( -2,d,0 ); die.add(hole);
+			hole = hole.clone(); hole.position.set( -2,d,d ); die.add(hole);
+
+			hole = hole.clone(); hole.rotation.y = Math.PI/2;
+			hole.position.set( -d,-d,2 ); die.add(hole);
+			hole = hole.clone(); hole.position.set( 0,0,2 ); die.add(hole);
+			hole = hole.clone(); hole.position.set( d,d,2 ); die.add(hole);
+
+			hole = hole.clone(); hole.position.set( -d,-d,-2 ); die.add(hole);
+			hole = hole.clone(); hole.position.set( -d,d,-2 ); die.add(hole);
+			hole = hole.clone(); hole.position.set( d,-d,-2 ); die.add(hole);
+			hole = hole.clone(); hole.position.set( d,d,-2 ); die.add(hole);
+*/
+						
+			var light = new THREE.PointLight();
+			light.position.set(0,50,100);
+			scene.add(light);
+			
+			function drawFrame()
+			{
+				requestAnimationFrame( drawFrame );
+				
+				// въртим обекта
+				mystery.rotation.x += 0.015;
+				mystery.rotation.y += 0.010;
+				mystery.rotation.z += 0.005;
+				
+				renderer.render( scene, camera );
+			}
+			drawFrame();
+		</script>
+	</body>
+</html>
